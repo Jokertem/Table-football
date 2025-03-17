@@ -1,0 +1,89 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+:root {
+  --mainColor: #009933;
+  --focusColor: #00cc00;
+  --lockColor: #999966;
+}
+header {
+  background-color: var(--mainColor);
+  height: 15vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+h1 {
+  color: white;
+  font-family: "Courier New", Courier, monospace;
+}
+.gamePanel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 25px;
+}
+.gamePanel button {
+  width: 160px;
+  height: 40px;
+  background-color: var(--mainColor);
+  color: white;
+  cursor: pointer;
+}
+.gamePanel button:hover {
+  background-color: var(--focusColor);
+}
+.control {
+  display: block;
+  text-align: center;
+  margin-top: 90px;
+}
+.levels {
+  display: none;
+  justify-content: center;
+  gap: 25px;
+  margin-top: 25px;
+  position: relative;
+}
+.levels div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50px;
+  height: 50px;
+  color: white;
+  font-weight: bold;
+  font-family: "Courier New", Courier, monospace;
+  border: solid 2px black;
+}
+.levels button {
+  width: 90px;
+  height: 50px;
+  background-color: var(--mainColor);
+  position: absolute;
+  top: 70px;
+  cursor: pointer;
+}
+.levels button:hover {
+  background-color: var(--focusColor);
+}
+.unlock {
+  background-color: var(--mainColor);
+  cursor: pointer;
+}
+.unlock:hover {
+  background-color: var(--focusColor);
+}
+.lock {
+  background-color: var(--lockColor);
+}
+#game {
+  display: none;
+  margin: auto;
+  margin-top: 25px;
+  border: solid 2px black;
+}
