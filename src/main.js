@@ -1,9 +1,11 @@
 //Imports
 import { HidePanel, LoadLevels } from "./functions.js";
 import { levels } from "./levels.js";
-import { drawBackGround } from "./background.js";
-import { drawPlayer } from "./drawPlayer.js";
-import { PlayerMove, BordeMove } from "./playerMove.js";
+import { DrawBackGround } from "./background.js";
+import { DrawPlayer } from "./drawPlayer.js";
+import { PlayerMove } from "./playerMove.js";
+import { DrawGoals } from "./drawGoals.js";
+import { DrawBall } from "./drawBall.js";
 
 //Panel Buttons Events
 document.querySelector("#btSingle").addEventListener("click", () => {
@@ -30,21 +32,30 @@ canvas.height = canvasSize.height;
 const socket = io();
 let player;
 let oponent;
-socket.on("getPlayer", (_player, _oponent) => {
+let goals;
+let ball;
+socket.on("getPlayer", (_player, _oponent, _goals, _ball) => {
   player = _player;
   oponent = _oponent;
+  goals = _goals;
+  ball = _ball;
   PlayerMove(canvasSize, player, socket);
 });
 
 const animate = () => {
   ctx.clearRect(0, 0, canvasSize.width, canvasSize.height);
-  drawBackGround(ctx, canvasSize);
+  DrawBackGround(ctx, canvasSize);
   if (player) {
-    drawPlayer(ctx, player, canvasSize);
-    BordeMove(player, canvasSize);
+    DrawPlayer(ctx, player, canvasSize);
   }
   if (oponent) {
-    drawPlayer(ctx, oponent, canvasSize);
+    DrawPlayer(ctx, oponent, canvasSize);
+  }
+  if (goals) {
+    DrawGoals(ctx, goals);
+  }
+  if (ball) {
+    DrawBall(ctx, ball);
   }
   requestAnimationFrame(animate);
 };

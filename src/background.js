@@ -8,7 +8,7 @@ const penaltyArea = {
   width: 100,
   height: 220,
 };
-export const drawBackGround = (ctx, canvasSize) => {
+export const DrawBackGround = (ctx, canvasSize) => {
   //Grass
   ctx.fillStyle = lightGrass;
   ctx.fillRect(0, 0, canvasSize.width, canvasSize.height);

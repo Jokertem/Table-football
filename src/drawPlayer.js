@@ -2,7 +2,7 @@ const pipesColor = "#3d3939";
 const pipesSize = 5;
 const playerOneColor = "#e20404";
 const playerTwoColor = "#1E65B7";
-export const drawPlayer = (ctx, player, canvasSize) => {
+export const DrawPlayer = (ctx, player, canvasSize) => {
   //Draw Pipes
   ctx.fillStyle = pipesColor;
   ctx.fillRect(
