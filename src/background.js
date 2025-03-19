@@ -27,7 +27,12 @@ export const drawBackGround = (ctx, canvasSize) => {
   ctx.fillRect(canvasSize.width - lineSize, 0, lineSize, canvasSize.height); //Right Line
   ctx.fillRect(0, 0, canvasSize.width, lineSize); //BottonmLine
   ctx.fillRect(0, canvasSize.height - lineSize, canvasSize.width, lineSize); //Left Line
-  ctx.fillRect(canvasSize.width / 2 - lineSize, 0, lineSize, canvasSize.height); //Mid Line
+  ctx.fillRect(
+    canvasSize.width / 2 - lineSize / 2,
+    0,
+    lineSize,
+    canvasSize.height
+  ); //Mid Line
   ctx.strokeRect(
     0,
     canvasSize.height / 2 - penaltyArea.height / 2,

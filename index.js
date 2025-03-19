@@ -13,13 +13,16 @@ app.use(express.static(path.join(__dirname, "/")));
 
 io.on("connection", (socket) => {
   console.log("a user connected");
-  socket.on("joinSingle", (level, canvasSize) => {
+  socket.on("joinSingle", (canvasSizes, speed) => {
     console.log("Single");
     const roomID = crypto.randomUUID();
-    const player = new Player(1, canvasSize);
+    const player = new Player(1, canvasSizes, speed);
+    const oponent = new Player(2, canvasSizes, speed);
     socket.join(roomID);
-    console.log(player);
-    io.to(roomID).emit("getPlayer", player);
+    io.to(roomID).emit("getPlayer", player, oponent);
+    socket.on("updatePos", (player) => {
+      console.log(player);
+    });
   });
 });
 

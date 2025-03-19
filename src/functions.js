@@ -25,7 +25,7 @@ export const LoadLevels = (levels, canvasSize, socket) => {
       newLevel.setAttribute("class", "unlock");
       newLevel.addEventListener("click", () => {
         ShowGame();
-        socket.emit("joinSingle", level.lvl, canvasSize);
+        socket.emit("joinSingle", canvasSize, levels[level.lvl].oponentSpeed);
       });
     } else {
       newLevel.setAttribute("class", "lock");
