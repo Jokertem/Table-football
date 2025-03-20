@@ -41,6 +41,9 @@ socket.on("getPlayer", (_player, _oponent, _goals, _ball) => {
   ball = _ball;
   PlayerMove(canvasSize, player, socket);
 });
+socket.on("getGame", (_ball) => {
+  ball = _ball;
+});
 
 const animate = () => {
   ctx.clearRect(0, 0, canvasSize.width, canvasSize.height);

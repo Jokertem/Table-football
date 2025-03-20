@@ -1,6 +1,6 @@
 const playerSize = {
   width: 20,
-  height: 50,
+  height: 45,
 };
 const pawnsPos = {
   goalKeeper: 50,
@@ -10,11 +10,11 @@ const pawnsPos = {
 };
 
 class Player {
-  constructor(id, canvasSize, speed) {
+  constructor(id, canvasSize, speed, bot) {
     this.id = id;
     this.size = playerSize;
-
     this.speed = speed;
+    this.bot = bot;
     //Player One
     if (id === 1) {
       this.goalKeeper = {

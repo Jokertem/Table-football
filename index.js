@@ -18,17 +18,27 @@ io.on("connection", (socket) => {
   socket.on("joinSingle", (canvasSizes, speed) => {
     console.log("Single");
     const roomID = crypto.randomUUID();
-    const player = new Player(1, canvasSizes, 20);
-    const oponent = new Player(2, canvasSizes, speed);
+    let player = new Player(1, canvasSizes, 30, false);
+    let oponent = new Player(2, canvasSizes, speed, true);
     const goals = [];
     goals.push(new Goal(1, canvasSizes));
     goals.push(new Goal(2, canvasSizes));
     const ball = new Ball(canvasSizes);
     socket.join(roomID);
     io.to(roomID).emit("getPlayer", player, oponent, goals, ball);
-    socket.on("updatePos", (player) => {
-      console.log(player);
+    socket.on("updatePos", (_player) => {
+      player = _player;
     });
+    setTimeout(() => {
+      ball.velocityX = -1;
+      ball.velocityY = 1;
+    }, 1000);
+    setInterval(() => {
+      ball.updade(canvasSizes);
+      ball.PlayerBounce(player);
+      ball.PlayerBounce(oponent);
+      socket.emit("getGame", ball);
+    }, 60);
   });
 });
 
