@@ -3,9 +3,10 @@ import { HidePanel, LoadLevels } from "./functions.js";
 import { levels } from "./levels.js";
 import { DrawBackGround } from "./background.js";
 import { DrawPlayer } from "./drawPlayer.js";
-import { PlayerMove } from "./playerMove.js";
+import { SetEvents, PlayerMove } from "./playerMove.js";
 import { DrawGoals } from "./drawGoals.js";
 import { DrawBall } from "./drawBall.js";
+import { DrawScore } from "./drawScore.js";
 
 //Panel Buttons Events
 document.querySelector("#btSingle").addEventListener("click", () => {
@@ -34,15 +35,19 @@ let player;
 let oponent;
 let goals;
 let ball;
-socket.on("getPlayer", (_player, _oponent, _goals, _ball) => {
+let scoreboard;
+socket.on("getPlayer", (_player, _oponent, _goals, _ball, _scoreborad) => {
   player = _player;
   oponent = _oponent;
   goals = _goals;
   ball = _ball;
-  PlayerMove(canvasSize, player, socket);
+  scoreboard = _scoreborad;
+  SetEvents();
 });
-socket.on("getGame", (_ball) => {
+socket.on("getGame", (_ball, _oponent, _scoreboard) => {
   ball = _ball;
+  oponent = _oponent;
+  scoreboard = _scoreboard;
 });
 
 const animate = () => {
@@ -60,6 +65,10 @@ const animate = () => {
   if (ball) {
     DrawBall(ctx, ball);
   }
+  if (scoreboard) {
+    DrawScore(ctx, scoreboard, canvasSize);
+  }
+  PlayerMove(canvasSize, player, socket);
   requestAnimationFrame(animate);
 };
 animate();

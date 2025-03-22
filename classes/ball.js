@@ -1,5 +1,5 @@
 const ballSize = 16;
-const ballSpeed = 8;
+const ballSpeed = 15;
 class Ball {
   constructor(canvasSize) {
     this.x = canvasSize.width / 2 - ballSize / 2;
@@ -7,11 +7,11 @@ class Ball {
     this.size = ballSize;
     this.speed = ballSpeed;
     this.acceleration = 0.1;
-    this.maxSpeed = 35;
+    this.maxSpeed = 50;
     this.velocityX = 0;
     this.velocityY = 0;
   }
-  updade(canvasSize) {
+  updade(canvasSize, goals, scoreboard) {
     //Move
     if (this.velocityX === -1) {
       this.x += this.velocityX * this.speed;
@@ -19,9 +19,9 @@ class Ball {
       this.x += this.velocityX * this.speed;
     }
     if (this.velocityY === -1) {
-      this.y += this.velocityY * this.speed;
+      this.y += this.velocityY * 7;
     } else if (this.velocityY === 1) {
-      this.y += this.velocityY * this.speed;
+      this.y += this.velocityY * 7;
     }
     //Acceleration
     if (this.speed < this.maxSpeed) {
@@ -40,6 +40,28 @@ class Ball {
     if (this.x + this.size > canvasSize.width) {
       this.velocityX = -1;
     }
+    //Goal
+    goals.forEach((goal) => {
+      if (
+        isColisons(
+          { x: this.x, y: this.y, w: this.size, h: this.size },
+          {
+            x: goal.x,
+            y: goal.y,
+            w: goal.size.width,
+            h: goal.size.height,
+          }
+        )
+      ) {
+        if (goal.id === 1) {
+          scoreboard.pl2++;
+          this.restart(canvasSize);
+        } else {
+          scoreboard.pl1++;
+          this.restart(canvasSize);
+        }
+      }
+    });
   }
   PlayerBounce(player) {
     if (
@@ -101,6 +123,25 @@ class Ball {
       }
     });
   }
+  restart(canvasSize) {
+    this.x = canvasSize.width / 2 - ballSize / 2;
+    this.y = canvasSize.height / 2 - ballSize / 2;
+    this.speed = ballSpeed;
+    const randomX = Math.floor(Math.random() * 2);
+    const randomY = Math.floor(Math.random() * 2);
+    setTimeout(() => {
+      if (randomX === 0) {
+        this.velocityX = -1;
+      } else {
+        this.velocityX = 1;
+      }
+      if (randomY === 0) {
+        this.velocityY = -1;
+      } else {
+        this.velocityY = 1;
+      }
+    }, 1000);
+  }
 }
 module.exports = Ball;
 const bounce = (ball, player) => {
@@ -109,7 +150,12 @@ const bounce = (ball, player) => {
   } else {
     ball.velocityX = -1;
   }
-  ball.velocityY * -1;
+  const randomY = Math.floor(Math.random() * 2);
+  if (randomY === 0) {
+    ball.velocityY = -1;
+  } else {
+    ball.velocityY = 1;
+  }
 };
 const isColisons = (obj1, obj2) => {
   return (

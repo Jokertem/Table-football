@@ -16,28 +16,28 @@ app.use(express.static(path.join(__dirname, "/")));
 io.on("connection", (socket) => {
   console.log("a user connected");
   socket.on("joinSingle", (canvasSizes, speed) => {
-    console.log("Single");
-    const roomID = crypto.randomUUID();
-    let player = new Player(1, canvasSizes, 30, false);
-    let oponent = new Player(2, canvasSizes, speed, true);
-    const goals = [];
-    goals.push(new Goal(1, canvasSizes));
-    goals.push(new Goal(2, canvasSizes));
-    const ball = new Ball(canvasSizes);
-    socket.join(roomID);
-    io.to(roomID).emit("getPlayer", player, oponent, goals, ball);
+    const roomID = crypto.randomUUID(); // Create Room ID
+    let player = new Player(1, canvasSizes, 10, false); //Create Player
+    let oponent = new Player(2, canvasSizes, speed, true); //Create Bot
+    const scoreboard = { max: 9, pl1: 0, pl2: 0 }; //Create ScoreBoard
+    const goals = []; //Gools Array
+    goals.push(new Goal(1, canvasSizes)); //Add Goal
+    goals.push(new Goal(2, canvasSizes)); //Add Goal
+    const ball = new Ball(canvasSizes); //Create Ball
+    socket.join(roomID); //Join Room
+    io.to(roomID).emit("getPlayer", player, oponent, goals, ball, scoreboard); //Base Emit
     socket.on("updatePos", (_player) => {
       player = _player;
     });
-    setTimeout(() => {
-      ball.velocityX = -1;
-      ball.velocityY = 1;
-    }, 1000);
+    ball.restart(canvasSizes); // Set Ball Velocity
     setInterval(() => {
-      ball.updade(canvasSizes);
+      ball.updade(canvasSizes, goals, scoreboard);
       ball.PlayerBounce(player);
       ball.PlayerBounce(oponent);
-      socket.emit("getGame", ball);
+      if (ball.velocityY !== 0) {
+        oponent.botMove(ball, canvasSizes);
+      }
+      socket.emit("getGame", ball, oponent, scoreboard);
     }, 60);
   });
 });

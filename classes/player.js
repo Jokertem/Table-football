@@ -124,5 +124,44 @@ class Player {
       ];
     }
   }
+  botMove(ball, canvasSize) {
+    if (this.bot === true) {
+      const movePoint = canvasSize.height / 2;
+
+      if (ball.y < movePoint) {
+        if (this.aid[0].y < 0) {
+          return;
+        }
+        this.aid.forEach((pawn) => {
+          pawn.y -= this.speed;
+        });
+
+        this.attack.forEach((pawn) => {
+          pawn.y -= this.speed;
+        });
+        this.defense.forEach((pawn) => {
+          pawn.y -= this.speed;
+        });
+
+        this.goalKeeper.y -= this.speed;
+      } else if (ball.y > movePoint) {
+        if (this.aid[1].y + this.size.height > canvasSize.height) {
+          return;
+        }
+        this.aid.forEach((pawn) => {
+          pawn.y += this.speed;
+        });
+
+        this.attack.forEach((pawn) => {
+          pawn.y += this.speed;
+        });
+        this.defense.forEach((pawn) => {
+          pawn.y += this.speed;
+        });
+
+        this.goalKeeper.y += this.speed;
+      }
+    }
+  }
 }
 module.exports = Player;

@@ -4,6 +4,7 @@ const goalSize = {
 };
 class Goal {
   constructor(id, canvasSize) {
+    this.id = id;
     if (id === 1) {
       this.x = 0;
       this.y = canvasSize.height / 2 - goalSize.height / 2;

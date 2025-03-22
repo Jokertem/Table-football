@@ -1,7 +1,7 @@
 export const levels = [
   {
     lvl: 1,
-    oponentSpeed: 30,
+    oponentSpeed: 6,
     unclock: true,
   },
   {
