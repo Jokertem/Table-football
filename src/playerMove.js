@@ -11,7 +11,6 @@ export const SetEvents = () => {
     } else if (code === "ArrowDown" || code === "KeyS") {
       move.down = true;
     }
-    socket.emit("updatePos", player);
   });
   window.addEventListener("keyup", (e) => {
     const code = e.code;
@@ -57,5 +56,7 @@ export const PlayerMove = (canvasSize, player, socket) => {
 
     player.goalKeeper.y += player.speed;
   }
-  socket.emit("updatePos", player);
+  if (move.down || move.up) {
+    socket.emit("updatePos", player);
+  }
 };

@@ -7,7 +7,7 @@ class Ball {
     this.size = ballSize;
     this.speed = ballSpeed;
     this.acceleration = 0.1;
-    this.maxSpeed = 50;
+    this.maxSpeed = 30;
     this.velocityX = 0;
     this.velocityY = 0;
   }
@@ -26,19 +26,6 @@ class Ball {
     //Acceleration
     if (this.speed < this.maxSpeed) {
       this.speed += this.acceleration;
-    }
-    //Border Bounce
-    if (this.y < 0) {
-      this.velocityY = 1;
-    }
-    if (this.y + this.size > canvasSize.height) {
-      this.velocityY = -1;
-    }
-    if (this.x < 0) {
-      this.velocityX = 1;
-    }
-    if (this.x + this.size > canvasSize.width) {
-      this.velocityX = -1;
     }
     //Goal
     goals.forEach((goal) => {
@@ -62,6 +49,20 @@ class Ball {
         }
       }
     });
+
+    //Border Bounce
+    if (this.y < 0) {
+      this.velocityY = 1;
+    }
+    if (this.y + this.size > canvasSize.height) {
+      this.velocityY = -1;
+    }
+    if (this.x < 0) {
+      this.velocityX = 1;
+    }
+    if (this.x + this.size > canvasSize.width) {
+      this.velocityX = -1;
+    }
   }
   PlayerBounce(player) {
     if (

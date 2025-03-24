@@ -3,7 +3,7 @@ const darkGrass = "#336600";
 const lineColor = "#ffffff";
 
 const lineSize = 10;
-const grassSize = 60;
+const grassSize = 100;
 const penaltyArea = {
   width: 100,
   height: 220,
@@ -13,7 +13,7 @@ export const DrawBackGround = (ctx, canvasSize) => {
   ctx.fillStyle = lightGrass;
   ctx.fillRect(0, 0, canvasSize.width, canvasSize.height);
   ctx.fillStyle = darkGrass;
-  for (let index = 0; index < 15; index++) {
+  for (let index = 0; index < 11; index++) {
     if (index % 2 == 0) {
       continue;
     }

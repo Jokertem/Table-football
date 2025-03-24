@@ -18,13 +18,16 @@ document.querySelector("#btMulti").addEventListener("click", () => {
   HidePanel();
 });
 
+//Unlock Level
+const unlockLevels = localStorage.getItem("level") | 1;
+
 //Get Canvas
 const canvas = document.querySelector("#game");
 const ctx = canvas.getContext("2d");
 console.log(ctx);
 const canvasSize = {
-  width: 900,
-  height: 500,
+  width: 1100,
+  height: 550,
 };
 canvas.width = canvasSize.width;
 canvas.height = canvasSize.height;
@@ -36,12 +39,31 @@ let oponent;
 let goals;
 let ball;
 let scoreboard;
+socket.on("winSingle", () => {
+  if (Number(unlockLevels) <= levels.length) {
+    //Unlock new Level
+    let newLevel = Number(unlockLevels);
+    newLevel++;
+    console.log(newLevel);
+    localStorage.setItem("level", newLevel);
+  }
+
+  setTimeout(() => {
+    LoadLevels(levels, canvasSize, socket);
+  }, 1000);
+});
+socket.on("loseSingle", () => {
+  setTimeout(() => {
+    LoadLevels(levels, canvasSize, socket);
+  }, 1000);
+});
 socket.on("getPlayer", (_player, _oponent, _goals, _ball, _scoreborad) => {
   player = _player;
   oponent = _oponent;
   goals = _goals;
   ball = _ball;
   scoreboard = _scoreborad;
+  console.log(_goals);
   SetEvents();
 });
 socket.on("getGame", (_ball, _oponent, _scoreboard) => {

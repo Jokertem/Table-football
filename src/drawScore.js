@@ -4,6 +4,6 @@ export const DrawScore = (ctx, scoreboard, canvasSize) => {
   const text2 = `${scoreboard.pl2}/${scoreboard.max}`;
   ctx.font = "40px arial";
   ctx.fillStyle = fontColor;
-  ctx.fillText(text1, 285, 90);
-  ctx.fillText(text2, canvasSize.width - 225, 90);
+  ctx.fillText(text1, 240, 90);
+  ctx.fillText(text2, canvasSize.width - 280, 90);
 };

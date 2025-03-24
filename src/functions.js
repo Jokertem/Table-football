@@ -15,17 +15,27 @@ export const ShowPanel = () => {
   document.querySelector(".gamePanel").style.display = "flex";
 };
 export const LoadLevels = (levels, canvasSize, socket) => {
+  HideAll();
+  let unlockLevels = localStorage.getItem("level");
+  if (!unlockLevels) {
+    unlockLevels = 1;
+  }
+  const unlockLevel = Number(unlockLevels);
   const levelContainer = document.querySelector(".levels");
   levelContainer.style.display = "flex";
   levelContainer.innerHTML = "";
   levels.forEach((level) => {
     const newLevel = document.createElement("div");
     newLevel.innerText = level.lvl;
-    if (level.unclock) {
+    if (level.lvl <= unlockLevel) {
       newLevel.setAttribute("class", "unlock");
       newLevel.addEventListener("click", () => {
         ShowGame();
-        socket.emit("joinSingle", canvasSize, levels[level.lvl].oponentSpeed);
+        socket.emit(
+          "joinSingle",
+          canvasSize,
+          levels[level.lvl - 1].oponentSpeed
+        );
       });
     } else {
       newLevel.setAttribute("class", "lock");

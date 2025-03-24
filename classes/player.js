@@ -1,12 +1,12 @@
 const playerSize = {
   width: 20,
-  height: 45,
+  height: 55,
 };
 const pawnsPos = {
   goalKeeper: 50,
-  defense: 145,
-  aid: 360,
-  atteck: 640,
+  defense: 195,
+  aid: 460,
+  atteck: 760,
 };
 
 class Player {
@@ -64,12 +64,12 @@ class Player {
         },
         {
           x: pawnsPos.atteck,
-          y: canvasSize.height / 2 - playerSize.height / 2 - 130,
+          y: canvasSize.height / 2 - playerSize.height / 2 - 140,
           prevY: undefined,
         },
         {
           x: pawnsPos.atteck,
-          y: canvasSize.height / 2 - playerSize.height / 2 + 130,
+          y: canvasSize.height / 2 - playerSize.height / 2 + 140,
           prevY: undefined,
         },
       ];
@@ -128,7 +128,7 @@ class Player {
     if (this.bot === true) {
       const movePoint = canvasSize.height / 2;
 
-      if (ball.y < movePoint) {
+      if (ball.y + ball.size / 2 < movePoint) {
         if (this.aid[0].y < 0) {
           return;
         }
@@ -144,7 +144,7 @@ class Player {
         });
 
         this.goalKeeper.y -= this.speed;
-      } else if (ball.y > movePoint) {
+      } else if (ball.y + ball.size / 2 > movePoint) {
         if (this.aid[1].y + this.size.height > canvasSize.height) {
           return;
         }

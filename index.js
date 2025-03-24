@@ -17,9 +17,9 @@ io.on("connection", (socket) => {
   console.log("a user connected");
   socket.on("joinSingle", (canvasSizes, speed) => {
     const roomID = crypto.randomUUID(); // Create Room ID
-    let player = new Player(1, canvasSizes, 10, false); //Create Player
+    let player = new Player(1, canvasSizes, 16, false); //Create Player
     let oponent = new Player(2, canvasSizes, speed, true); //Create Bot
-    const scoreboard = { max: 9, pl1: 0, pl2: 0 }; //Create ScoreBoard
+    const scoreboard = { max: 6, pl1: 0, pl2: 0 }; //Create ScoreBoard
     const goals = []; //Gools Array
     goals.push(new Goal(1, canvasSizes)); //Add Goal
     goals.push(new Goal(2, canvasSizes)); //Add Goal
@@ -30,12 +30,21 @@ io.on("connection", (socket) => {
       player = _player;
     });
     ball.restart(canvasSizes); // Set Ball Velocity
-    setInterval(() => {
+    const gameInterval = setInterval(() => {
       ball.updade(canvasSizes, goals, scoreboard);
       ball.PlayerBounce(player);
       ball.PlayerBounce(oponent);
       if (ball.velocityY !== 0) {
         oponent.botMove(ball, canvasSizes);
+      }
+      if (scoreboard.pl1 >= scoreboard.max) {
+        io.to(roomID).emit("winSingle");
+        socket.leave(roomID);
+        clearInterval(gameInterval);
+      } else if (scoreboard.pl2 >= scoreboard.max) {
+        io.to(roomID).emit("loseSingle");
+        clearInterval(gameInterval);
+        socket.leave(roomID);
       }
       socket.emit("getGame", ball, oponent, scoreboard);
     }, 60);
