@@ -40,8 +40,9 @@ h1 {
 .control {
   display: block;
   text-align: center;
-  margin-top: 90px;
+  margin-top: 190px;
 }
+
 .levels {
   display: none;
   justify-content: center;
@@ -60,6 +61,7 @@ h1 {
   font-family: "Courier New", Courier, monospace;
   border: solid 2px black;
 }
+
 .levels button {
   width: 90px;
   height: 50px;
@@ -68,6 +70,7 @@ h1 {
   top: 70px;
   cursor: pointer;
 }
+.rooms button:hover,
 .levels button:hover {
   background-color: var(--focusColor);
 }
@@ -75,11 +78,45 @@ h1 {
   background-color: var(--mainColor);
   cursor: pointer;
 }
-.unlock:hover {
+.room:hover,
+unlock:hover {
   background-color: var(--focusColor);
 }
 .lock {
   background-color: var(--lockColor);
+}
+.rooms {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  gap: 20px;
+  margin-top: 20px;
+}
+.rooms button {
+  width: 90px;
+  height: 50px;
+  background-color: var(--mainColor);
+
+  top: 70px;
+  cursor: pointer;
+}
+
+.room {
+  display: flex;
+  gap: 50px;
+  background-color: var(--mainColor);
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+}
+.roomPanel {
+  display: flex;
+  gap: 20px;
+}
+.roomPanel button {
+  width: 70px;
+  height: 50px;
 }
 #game {
   display: none;

@@ -9,9 +9,15 @@ const crypto = require("crypto");
 const Player = require("./classes/player");
 const Goal = require("./classes/goal");
 const Ball = require("./classes/ball");
-
+const Room = require("./classes/room");
 const port = 4000;
 app.use(express.static(path.join(__dirname, "/")));
+
+const rooms = [];
+rooms.push(new Room());
+rooms.push(new Room());
+rooms.push(new Room());
+rooms.push(new Room());
 
 io.on("connection", (socket) => {
   console.log("a user connected");
@@ -38,16 +44,21 @@ io.on("connection", (socket) => {
         oponent.botMove(ball, canvasSizes);
       }
       if (scoreboard.pl1 >= scoreboard.max) {
+        //Win
         io.to(roomID).emit("winSingle");
         socket.leave(roomID);
         clearInterval(gameInterval);
       } else if (scoreboard.pl2 >= scoreboard.max) {
+        //Lose
         io.to(roomID).emit("loseSingle");
-        clearInterval(gameInterval);
-        socket.leave(roomID);
+        clearInterval(gameInterval); //Stop Interval
+        socket.leave(roomID); //Leave Room
       }
       socket.emit("getGame", ball, oponent, scoreboard);
     }, 60);
+  });
+  socket.on("joinMulti", () => {
+    socket.emit("getRooms", rooms);
   });
 });
 

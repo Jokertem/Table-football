@@ -1,5 +1,5 @@
 //Imports
-import { HidePanel, LoadLevels } from "./functions.js";
+import { HidePanel, LoadLevels, LoadRooms } from "./functions.js";
 import { levels } from "./levels.js";
 import { DrawBackGround } from "./background.js";
 import { DrawPlayer } from "./drawPlayer.js";
@@ -11,20 +11,21 @@ import { DrawScore } from "./drawScore.js";
 //Panel Buttons Events
 document.querySelector("#btSingle").addEventListener("click", () => {
   HidePanel();
-  LoadLevels(levels, canvasSize, socket);
+  LoadLevels(levels, canvasSize, socket, unlockLevels);
 });
 
 document.querySelector("#btMulti").addEventListener("click", () => {
   HidePanel();
+  LoadRooms(socket);
 });
 
 //Unlock Level
-const unlockLevels = localStorage.getItem("level") | 1;
+let unlockLevels = localStorage.getItem("level") | 1;
 
 //Get Canvas
 const canvas = document.querySelector("#game");
 const ctx = canvas.getContext("2d");
-console.log(ctx);
+
 const canvasSize = {
   width: 1100,
   height: 550,
@@ -39,22 +40,21 @@ let oponent;
 let goals;
 let ball;
 let scoreboard;
+
 socket.on("winSingle", () => {
-  if (Number(unlockLevels) <= levels.length) {
-    //Unlock new Level
-    let newLevel = Number(unlockLevels);
-    newLevel++;
-    console.log(newLevel);
-    localStorage.setItem("level", newLevel);
-  }
+  //Unlock new Level
+  let newLevel = Number(unlockLevels);
+  newLevel++;
+  unlockLevels = newLevel;
+  localStorage.setItem("level", unlockLevels);
 
   setTimeout(() => {
-    LoadLevels(levels, canvasSize, socket);
+    LoadLevels(levels, canvasSize, socket, unlockLevels);
   }, 1000);
 });
 socket.on("loseSingle", () => {
   setTimeout(() => {
-    LoadLevels(levels, canvasSize, socket);
+    LoadLevels(levels, canvasSize, socket, unlockLevels);
   }, 1000);
 });
 socket.on("getPlayer", (_player, _oponent, _goals, _ball, _scoreborad) => {
@@ -63,7 +63,6 @@ socket.on("getPlayer", (_player, _oponent, _goals, _ball, _scoreborad) => {
   goals = _goals;
   ball = _ball;
   scoreboard = _scoreborad;
-  console.log(_goals);
   SetEvents();
 });
 socket.on("getGame", (_ball, _oponent, _scoreboard) => {

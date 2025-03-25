@@ -5,7 +5,9 @@ const move = {
 export const SetEvents = () => {
   window.addEventListener("keydown", (e) => {
     const code = e.code;
-
+    if (code === "ArrowUp" || code === "ArrowDown") {
+      e.preventDefault();
+    }
     if (code === "ArrowUp" || code === "KeyW") {
       move.up = true;
     } else if (code === "ArrowDown" || code === "KeyS") {
