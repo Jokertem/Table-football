@@ -1,5 +1,5 @@
 //Imports
-import { HidePanel, LoadLevels, LoadRooms } from "./functions.js";
+import { HidePanel, LoadLevels, LoadRooms, ShowGame } from "./functions.js";
 import { levels } from "./levels.js";
 import { DrawBackGround } from "./background.js";
 import { DrawPlayer } from "./drawPlayer.js";
@@ -16,7 +16,9 @@ document.querySelector("#btSingle").addEventListener("click", () => {
 
 document.querySelector("#btMulti").addEventListener("click", () => {
   HidePanel();
-  LoadRooms(socket);
+
+  socket.emit("loadRooms");
+  LoadRooms(socket, canvasSize, rooms);
 });
 
 //Unlock Level
@@ -33,14 +35,22 @@ const canvasSize = {
 canvas.width = canvasSize.width;
 canvas.height = canvasSize.height;
 
-//Socket Connections
-const socket = io();
+// Games Elemnts
+let rooms;
 let player;
 let oponent;
 let goals;
 let ball;
 let scoreboard;
 
+//Socket Connections
+const socket = io();
+
+//Get Rooms
+socket.emit("loadRooms");
+socket.on("getRooms", (_rooms) => {
+  rooms = _rooms;
+});
 socket.on("winSingle", () => {
   //Unlock new Level
   let newLevel = Number(unlockLevels);
@@ -65,10 +75,28 @@ socket.on("getPlayer", (_player, _oponent, _goals, _ball, _scoreborad) => {
   scoreboard = _scoreborad;
   SetEvents();
 });
+socket.on("getPlayerMulti", (_player, _goals, _ball, _scoreboard) => {
+  player = _player;
+  goals = _goals;
+  ball = _ball;
+  scoreboard = _scoreboard;
+  console.log(_scoreboard);
+  SetEvents();
+});
+
 socket.on("getGame", (_ball, _oponent, _scoreboard) => {
   ball = _ball;
   oponent = _oponent;
   scoreboard = _scoreboard;
+});
+socket.on("gameMulti", (_oponent, _ball, _scoreboard) => {
+  oponent = _oponent;
+  ball = _ball;
+  scoreboard = _scoreboard;
+});
+socket.on("join", () => {
+  ShowGame();
+  console.log("join");
 });
 
 const animate = () => {

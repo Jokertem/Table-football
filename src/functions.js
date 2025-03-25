@@ -4,7 +4,7 @@ const HideAll = () => {
   document.querySelector(".rooms").style.display = "none";
   document.querySelector("#game").style.display = "none";
 };
-const ShowGame = () => {
+export const ShowGame = () => {
   HideAll();
   document.querySelector("#game").style.display = "block";
 };
@@ -49,13 +49,8 @@ export const LoadLevels = (levels, canvasSize, socket, unlockLevel) => {
   levelContainer.appendChild(returnButton);
 };
 let rooms;
-export const LoadRooms = (socket) => {
+export const LoadRooms = (socket, canvasSize, rooms) => {
   HideAll();
-  socket.emit("joinMulti");
-  //Get Rooms
-  socket.on("getRooms", (_rooms) => {
-    rooms = _rooms;
-  });
   const roomContainer = document.querySelector(".rooms"); //Create Rooms Container
 
   roomContainer.style.display = "flex"; //Show Rooms Container
@@ -66,8 +61,12 @@ export const LoadRooms = (socket) => {
       const newRoom = document.createElement("div"); //Create New Room
       newRoom.classList.add("room");
       roomContainer.appendChild(newRoom);
+      newRoom.addEventListener("click", () => {
+        //Join to room
+        socket.emit("joinRoom", room.id, canvasSize);
+      });
       const roomName = document.createElement("b");
-      roomName.innerText = `Room ${index++}`;
+      roomName.innerText = `Room ${index + 1}`;
       newRoom.appendChild(roomName);
       const roomPlayers = document.createElement("b");
       roomPlayers.innerText = `${room.players.length}/2`;
@@ -78,15 +77,15 @@ export const LoadRooms = (socket) => {
   roomPanel.classList.add("roomPanel"); //Add Class to Room Panel
   roomContainer.appendChild(roomPanel); //Add Room Panel
   const reloadButton = document.createElement("button"); //Create Reload Button
-  reloadButton.innerText = "Odśwież.";
+  reloadButton.innerText = "Odśwież";
   reloadButton.addEventListener("click", () => {
-    LoadRooms(socket);
+    //LoadRooms(socket, canvasSize);
   });
   roomPanel.appendChild(reloadButton);
   const newRoomButton = document.createElement("button");
-  newRoomButton.innerText = "Nowy Pokój.";
+  newRoomButton.innerText = "Nowy Pokój";
   newRoomButton.addEventListener("click", () => {
-    console.log("new room");
+    socket.emit("createRoom", canvasSize);
   });
   roomPanel.appendChild(newRoomButton);
   const returnButton = document.createElement("button"); //Create New Room Button
