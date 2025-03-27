@@ -14,6 +14,9 @@ const port = 4000;
 app.use(express.static(path.join(__dirname, "/")));
 
 const rooms = [];
+app.get("/rooms", (req, res) => {
+  res.send(rooms);
+});
 
 io.on("connection", (socket) => {
   console.log("a user connected");
@@ -56,9 +59,6 @@ io.on("connection", (socket) => {
   });
 
   //Multi Player
-  socket.on("loadRooms", () => {
-    socket.emit("getRooms", rooms);
-  });
 
   socket.on("createRoom", (canvasSize) => {
     const ball = new Ball(canvasSize); //Create Ball
@@ -78,8 +78,8 @@ io.on("connection", (socket) => {
     socket.join(id); //Join Room
     socket.playerId; //Save Player ID
 
-    if (!room.players[0]) {
-      room.players[0] = new Player(1, canvasSize, 16, false);
+    if (room.players.length === 0) {
+      room.players.push(new Player(1, canvasSize, 16, false));
       socket.emit(
         "getPlayerMulti",
         room.players[0],
@@ -88,8 +88,18 @@ io.on("connection", (socket) => {
         room.scoreboard
       );
       socket.playerId = 0;
-    } else if (!room.players[1]) {
-      room.players[1] = new Player(2, canvasSize, 16, false);
+    } else if (room.players[0].id === 2) {
+      room.players.push(new Player(1, canvasSize, 16, false));
+      socket.emit(
+        "getPlayerMulti",
+        room.players[1],
+        room.goals,
+        room.ball,
+        room.scoreboard
+      );
+      socket.playerId = 0;
+    } else if (room.players[0].id === 1) {
+      room.players.push(new Player(2, canvasSize, 16, false));
       socket.emit(
         "getPlayerMulti",
         room.players[1],
@@ -98,11 +108,23 @@ io.on("connection", (socket) => {
         room.scoreboard
       );
       socket.playerId = 1;
+    }
+    if (room.players.length === 2) {
+      room.scoreboard.pl1 = 0;
+      room.scoreboard.pl2 = 0;
       room.ball.restart(canvasSize); // Set Ball Velocity
     }
 
     socket.on("updatePos", (_player) => {
-      room.players[socket.playerId] = _player;
+      let player;
+      if (socket.playerId === 0) {
+        player = findPlayer(room, 1);
+      }
+      if (socket.playerId === 1) {
+        player = findPlayer(room, 2);
+      }
+
+      room.players[player] = _player;
     });
     const invetval = setInterval(() => {
       room.ball.updade(canvasSize, room.goals, room.scoreboard);
@@ -111,12 +133,43 @@ io.on("connection", (socket) => {
         room.ball.PlayerBounce(room.players[1]);
       }
 
+      if (
+        room.scoreboard.pl1 >= room.scoreboard.max ||
+        room.scoreboard.pl2 >= room.scoreboard.max
+      ) {
+        room.scoreboard.pl1 = 0;
+        room.scoreboard.pl2 = 0;
+        room.ball.restart(canvasSize);
+      }
+      let player;
       if (socket.playerId === 0) {
-        socket.emit("gameMulti", room.players[1], room.ball, room.scoreboard);
+        player = findPlayer(room, 2);
       } else if (socket.playerId === 1) {
-        socket.emit("gameMulti", room.players[0], room.ball, room.scoreboard);
+        player = findPlayer(room, 1);
+      }
+      if (room.players.length === 2) {
+        socket.emit(
+          "gameMulti",
+          room.players[player],
+          room.ball,
+          room.scoreboard
+        );
       }
     }, 60);
+    socket.on("disconnect", () => {
+      let player;
+      if (socket.playerId === 0) {
+        player = findPlayer(room, 1);
+      }
+      if (socket.playerId === 1) {
+        player = findPlayer(room, 2);
+      }
+      room.players.splice(player, 1);
+      room.ball.velocityX = 0;
+      room.ball.velocityY = 0;
+      socket.leave(room.id);
+      clearInterval(invetval);
+    });
   });
 });
 
@@ -124,6 +177,10 @@ const findRoom = (id) => {
   const roomIndex = rooms.findIndex((room) => room.id === id);
 
   return rooms[roomIndex];
+};
+const findPlayer = (room, id) => {
+  const playerIndex = room.players.findIndex((player) => player.id === id);
+  return playerIndex;
 };
 server.listen(port, () => {
   console.log(`server running at PORT ${port}`);

@@ -20,57 +20,47 @@ class Player {
       this.goalKeeper = {
         x: pawnsPos.goalKeeper,
         y: canvasSize.height / 2 - playerSize.height / 2,
-        prevY: undefined,
       };
       this.defense = [
         {
           x: pawnsPos.defense,
           y: canvasSize.height / 2 - playerSize.height / 2 - 90,
-          prevY: undefined,
         },
         {
           x: pawnsPos.defense,
           y: canvasSize.height / 2 - playerSize.height / 2 + 90,
-          prevY: undefined,
         },
       ];
       this.aid = [
         {
           x: pawnsPos.aid,
           y: canvasSize.height / 2 - playerSize.height / 2 - 180,
-          prevY: undefined,
         },
         {
           x: pawnsPos.aid,
           y: canvasSize.height / 2 - playerSize.height / 2 + 180,
-          prevY: undefined,
         },
         {
           x: pawnsPos.aid,
           y: canvasSize.height / 2 - playerSize.height / 2 - 60,
-          prevY: undefined,
         },
         {
           x: pawnsPos.aid,
           y: canvasSize.height / 2 - playerSize.height / 2 + 60,
-          prevY: undefined,
         },
       ];
       this.attack = [
         {
           x: pawnsPos.atteck,
           y: canvasSize.height / 2 - playerSize.height / 2,
-          prevY: undefined,
         },
         {
           x: pawnsPos.atteck,
           y: canvasSize.height / 2 - playerSize.height / 2 - 140,
-          prevY: undefined,
         },
         {
           x: pawnsPos.atteck,
           y: canvasSize.height / 2 - playerSize.height / 2 + 140,
-          prevY: undefined,
         },
       ];
     }

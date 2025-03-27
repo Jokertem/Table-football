@@ -17,8 +17,7 @@ document.querySelector("#btSingle").addEventListener("click", () => {
 document.querySelector("#btMulti").addEventListener("click", () => {
   HidePanel();
 
-  socket.emit("loadRooms");
-  LoadRooms(socket, canvasSize, rooms);
+  LoadRooms(socket, canvasSize);
 });
 
 //Unlock Level
@@ -36,7 +35,6 @@ canvas.width = canvasSize.width;
 canvas.height = canvasSize.height;
 
 // Games Elemnts
-let rooms;
 let player;
 let oponent;
 let goals;
@@ -47,10 +45,7 @@ let scoreboard;
 const socket = io();
 
 //Get Rooms
-socket.emit("loadRooms");
-socket.on("getRooms", (_rooms) => {
-  rooms = _rooms;
-});
+
 socket.on("winSingle", () => {
   //Unlock new Level
   let newLevel = Number(unlockLevels);
@@ -80,7 +75,6 @@ socket.on("getPlayerMulti", (_player, _goals, _ball, _scoreboard) => {
   goals = _goals;
   ball = _ball;
   scoreboard = _scoreboard;
-  console.log(_scoreboard);
   SetEvents();
 });
 
