@@ -65,118 +65,135 @@ io.on("connection", (socket) => {
     const goals = []; //Create Goals
     goals.push(new Goal(1, canvasSize)); //Add Goal
     goals.push(new Goal(2, canvasSize)); //Add Goal
-    rooms.push(new Room(ball, goals)); //Create New Room
+    const room = new Room(ball, goals);
+    rooms.push(room); //Create New Room
+    join(room.id, canvasSize, socket);
   });
   socket.on("joinRoom", (id, canvasSize) => {
-    const room = findRoom(id); //Find Room
-    if (room.players.length < 2) {
-      socket.emit("join");
-    } else {
-      return;
-    }
-
-    socket.join(id); //Join Room
-    socket.playerId; //Save Player ID
-
-    if (room.players.length === 0) {
-      room.players.push(new Player(1, canvasSize, 16, false));
-      socket.emit(
-        "getPlayerMulti",
-        room.players[0],
-        room.goals,
-        room.ball,
-        room.scoreboard
-      );
-      socket.playerId = 0;
-    } else if (room.players[0].id === 2) {
-      room.players.push(new Player(1, canvasSize, 16, false));
-      socket.emit(
-        "getPlayerMulti",
-        room.players[1],
-        room.goals,
-        room.ball,
-        room.scoreboard
-      );
-      socket.playerId = 0;
-    } else if (room.players[0].id === 1) {
-      room.players.push(new Player(2, canvasSize, 16, false));
-      socket.emit(
-        "getPlayerMulti",
-        room.players[1],
-        room.goals,
-        room.ball,
-        room.scoreboard
-      );
-      socket.playerId = 1;
-    }
-    if (room.players.length === 2) {
-      room.scoreboard.pl1 = 0;
-      room.scoreboard.pl2 = 0;
-      room.ball.restart(canvasSize); // Set Ball Velocity
-    }
-
-    socket.on("updatePos", (_player) => {
-      let player;
-      if (socket.playerId === 0) {
-        player = findPlayer(room, 1);
-      }
-      if (socket.playerId === 1) {
-        player = findPlayer(room, 2);
-      }
-
-      room.players[player] = _player;
-    });
-    const invetval = setInterval(() => {
-      room.ball.updade(canvasSize, room.goals, room.scoreboard);
-      if (room.players.length >= 2) {
-        room.ball.PlayerBounce(room.players[0]);
-        room.ball.PlayerBounce(room.players[1]);
-      }
-
-      if (
-        room.scoreboard.pl1 >= room.scoreboard.max ||
-        room.scoreboard.pl2 >= room.scoreboard.max
-      ) {
-        room.scoreboard.pl1 = 0;
-        room.scoreboard.pl2 = 0;
-        room.ball.restart(canvasSize);
-      }
-      let player;
-      if (socket.playerId === 0) {
-        player = findPlayer(room, 2);
-      } else if (socket.playerId === 1) {
-        player = findPlayer(room, 1);
-      }
-      if (room.players.length === 2) {
-        socket.emit(
-          "gameMulti",
-          room.players[player],
-          room.ball,
-          room.scoreboard
-        );
-      }
-    }, 60);
-    socket.on("disconnect", () => {
-      let player;
-      if (socket.playerId === 0) {
-        player = findPlayer(room, 1);
-      }
-      if (socket.playerId === 1) {
-        player = findPlayer(room, 2);
-      }
-      room.players.splice(player, 1);
-      room.ball.velocityX = 0;
-      room.ball.velocityY = 0;
-      socket.leave(room.id);
-      clearInterval(invetval);
-    });
+    join(id, canvasSize, socket);
   });
 });
 
+const join = (id, canvasSize, socket) => {
+  const room = findRoom(id); //Find Room
+  if (!room) {
+    return;
+  }
+  if (room.players.length < 2) {
+    socket.emit("join");
+  } else {
+    return;
+  }
+
+  socket.join(id); //Join Room
+  socket.playerId; //Save Player ID
+
+  if (room.players.length === 0) {
+    room.players.push(new Player(1, canvasSize, 16, false));
+    socket.emit(
+      "getPlayerMulti",
+      room.players[0],
+      room.goals,
+      room.ball,
+      room.scoreboard
+    );
+    socket.playerId = 0;
+  } else if (room.players[0].id === 2) {
+    room.players.push(new Player(1, canvasSize, 16, false));
+    socket.emit(
+      "getPlayerMulti",
+      room.players[1],
+      room.goals,
+      room.ball,
+      room.scoreboard
+    );
+    socket.playerId = 0;
+  } else if (room.players[0].id === 1) {
+    room.players.push(new Player(2, canvasSize, 16, false));
+    socket.emit(
+      "getPlayerMulti",
+      room.players[1],
+      room.goals,
+      room.ball,
+      room.scoreboard
+    );
+    socket.playerId = 1;
+  }
+  if (room.players.length === 2) {
+    room.scoreboard.pl1 = 0;
+    room.scoreboard.pl2 = 0;
+    room.ball.restart(canvasSize); // Set Ball Velocity
+  }
+
+  socket.on("updatePos", (_player) => {
+    let player;
+    if (socket.playerId === 0) {
+      player = findPlayer(room, 1);
+    }
+    if (socket.playerId === 1) {
+      player = findPlayer(room, 2);
+    }
+
+    room.players[player] = _player;
+  });
+  const invetval = setInterval(() => {
+    room.ball.updade(canvasSize, room.goals, room.scoreboard);
+    if (room.players.length >= 2) {
+      room.ball.PlayerBounce(room.players[0]);
+      room.ball.PlayerBounce(room.players[1]);
+    }
+
+    if (
+      room.scoreboard.pl1 >= room.scoreboard.max ||
+      room.scoreboard.pl2 >= room.scoreboard.max
+    ) {
+      room.scoreboard.pl1 = 0;
+      room.scoreboard.pl2 = 0;
+      room.ball.restart(canvasSize);
+    }
+    let player;
+    if (socket.playerId === 0) {
+      player = findPlayer(room, 2);
+    } else if (socket.playerId === 1) {
+      player = findPlayer(room, 1);
+    }
+    if (room.players.length === 2) {
+      socket.emit(
+        "gameMulti",
+        room.players[player],
+        room.ball,
+        room.scoreboard
+      );
+    }
+  }, 60);
+  socket.on("disconnect", () => {
+    let player;
+    if (socket.playerId === 0) {
+      player = findPlayer(room, 1);
+    }
+    if (socket.playerId === 1) {
+      player = findPlayer(room, 2);
+    }
+    room.players.splice(player, 1);
+    room.ball.velocityX = 0;
+    room.ball.velocityY = 0;
+    //Remove empty room
+    if (room.players.length <= 0) {
+      rooms.splice(findRoomID(id), 1);
+    }
+    socket.leave(room.id);
+    clearInterval(invetval);
+  });
+};
 const findRoom = (id) => {
   const roomIndex = rooms.findIndex((room) => room.id === id);
 
   return rooms[roomIndex];
+};
+const findRoomID = (id) => {
+  const roomIndex = rooms.findIndex((room) => room.id === id);
+
+  return roomIndex;
 };
 const findPlayer = (room, id) => {
   const playerIndex = room.players.findIndex((player) => player.id === id);

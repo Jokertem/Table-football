@@ -6,7 +6,7 @@ const lineSize = 10;
 const grassSize = 100;
 const penaltyArea = {
   width: 100,
-  height: 220,
+  height: 240,
 };
 export const DrawBackGround = (ctx, canvasSize) => {
   //Grass

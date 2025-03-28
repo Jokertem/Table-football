@@ -1,6 +1,6 @@
 const goalSize = {
   width: 15,
-  height: 150,
+  height: 175,
 };
 class Goal {
   constructor(id, canvasSize) {
