@@ -2,6 +2,46 @@ const move = {
   up: false,
   down: false,
 };
+//Mobile Buttons Mouse Events
+document.querySelector("#downButton").addEventListener("mousedown",()=>{
+  move.down = true
+  move.up = false
+})
+document.querySelector("#upButton").addEventListener("mousedown",()=>{
+  move.down = false
+  move.up = true
+})
+
+document.querySelector("#downButton").addEventListener("mouseup",()=>{
+  move.down = false
+  move.up = false
+})
+document.querySelector("#upButton").addEventListener("mouseup",()=>{
+ 
+  move.down = false
+  move.up = false
+})
+
+//Mobile Buttons Touch Events
+document.querySelector("#downButton").addEventListener("touchstart",()=>{
+  move.down = true
+  move.up = false
+})
+document.querySelector("#upButton").addEventListener("touchstart",()=>{
+  move.down = false
+  move.up = true
+})
+
+document.querySelector("#downButton").addEventListener("touchstop",()=>{
+  move.down = false
+  move.up = false
+})
+document.querySelector("#upButton").addEventListener("touchstop",()=>{
+  
+  move.down = false
+  move.up = false
+})
+
 export const SetEvents = () => {
   window.addEventListener("keydown", (e) => {
     const code = e.code;

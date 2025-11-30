@@ -42,7 +42,17 @@ h1 {
   text-align: center;
   margin-top: 190px;
 }
+.mobilePanel{
+  display: none;
+  justify-content: center;
+  margin-top: 20px;
+  gap: 20px;
 
+}
+.mobilePanel button{
+  width: 164px;
+  height: 164px;
+}
 .levels {
   display: none;
   justify-content: center;

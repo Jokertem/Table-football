@@ -10,7 +10,7 @@ const Player = require("./classes/player");
 const Goal = require("./classes/goal");
 const Ball = require("./classes/ball");
 const Room = require("./classes/room");
-const port = 4000;
+const nport = 4000;
 app.use(express.static(path.join(__dirname, "/")));
 
 const rooms = [];
@@ -199,6 +199,6 @@ const findPlayer = (room, id) => {
   const playerIndex = room.players.findIndex((player) => player.id === id);
   return playerIndex;
 };
-server.listen(port, () => {
-  console.log(`server running at PORT ${port}`);
+server.listen(4000,"0.0.0.0", () => {
+  console.log(`server running at PORT ${4000}`);
 });

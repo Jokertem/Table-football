@@ -7,6 +7,7 @@ const HideAll = () => {
 export const ShowGame = () => {
   HideAll();
   document.querySelector("#game").style.display = "block";
+  document.querySelector(".mobilePanel").style.display = "flex"
 };
 export const HidePanel = () => {
   document.querySelector(".gamePanel").style.display = "none";
@@ -51,7 +52,7 @@ export const LoadLevels = (levels, canvasSize, socket, unlockLevel) => {
 export const LoadRooms = async (socket, canvasSize) => {
   HideAll();
   let rooms = [];
-  const url = "http://localhost:4000/rooms"; //Request Adress
+  const url = "http://192.168.0.111:4000/rooms"; //Request Adress
   const fetchPromise = fetch(url);
   fetchPromise
     .then((response) => {
